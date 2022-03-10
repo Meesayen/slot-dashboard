@@ -11,17 +11,17 @@ export function useSlotsData() {
       .from('slots')
       .select(
         `
-      id,
-      name,
-      available,
-      feature,
-      updated_at,
-      claimed_by (
-        id,
-        username,
-        avatar_url
-      )
-    `
+          id,
+          name,
+          available,
+          feature,
+          updated_at,
+          claimed_by (
+            id,
+            username,
+            avatar_url
+          )
+        `
       )
       .order('id')
   }

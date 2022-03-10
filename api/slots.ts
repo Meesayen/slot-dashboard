@@ -5,6 +5,6 @@ export default async function handler(
   request: VercelRequest,
   response: VercelResponse
 ) {
-  const slots = api.from('slots').select()
+  const slots = await api.from('slots').select()
   response.status(200).json(slots)
 }
