@@ -1,15 +1,18 @@
 <template>
   <div
-    class="flex flex-col rounded-lg bg-white border-2 border-indigo-400 shadow-md space-y-2 h-48"
+    class="flex flex-col rounded-lg overflow-hidden bg-white border-2 border-indigo-400 shadow-md space-y-2 h-48"
   >
-    <div class="text-xl flex justify-between border-b border-zinc-200 p-3">
+    <div
+      class="text-xl flex justify-between border-b border-zinc-200 p-3"
+      :class="[slot.available ? 'bg-emerald-50' : 'bg-rose-50']"
+    >
       <span class="text-teal-600">
         {{ slot.name }}
       </span>
       <div class="flex space-x-2 items-center">
         <div
           class="h-2.5 w-2.5 rounded-full"
-          :class="[slot.available ? 'bg-emerald-400' : 'bg-orange-700']"
+          :class="[slot.available ? 'bg-emerald-400' : 'bg-rose-700']"
         ></div>
         <div class="text-xs uppercase tracking-wider">
           {{ slot.available ? 'available' : 'taken' }}
@@ -51,8 +54,8 @@ import { useSlotsApi } from '../api/slots'
 import { Slot } from '../api/types'
 import ProfileDisplay from './ProfileDisplay.vue'
 import Button from './Button.vue'
-import { inject } from 'vue'
-import { ModalApi } from './Slots.vue'
+import { useModal } from './modal'
+import { ModalKey } from './Modal.vue'
 
 const props = defineProps<{
   slot: Slot
@@ -61,10 +64,10 @@ const props = defineProps<{
 const api = useSlotsApi()
 const { profile } = useProfileData()
 
-const modal = inject(ModalApi)!
+const modal = useModal(ModalKey)
 
 function openModal() {
-  modal.value.open({
+  modal.open({
     slotId: props.slot.id,
     slotName: props.slot.name,
     user: profile.value!,

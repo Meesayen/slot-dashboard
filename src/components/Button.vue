@@ -5,6 +5,7 @@
       type === 'secondary'
         ? 'bg-teal-50 text-indigo-500  '
         : 'bg-indigo-500 text-white ',
+      disabled && 'pointer-events-none opacity-50',
     ]"
   >
     <slot />
@@ -14,5 +15,6 @@
 <script setup lang="ts">
 defineProps<{
   type?: 'primary' | 'secondary'
+  disabled?: boolean
 }>()
 </script>

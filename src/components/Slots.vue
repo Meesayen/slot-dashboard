@@ -6,24 +6,13 @@
     <SlotCard v-for="slot of slots" :key="slot.id" :slot="slot" />
   </div>
 
-  <Modal ref="modal" />
+  <Modal />
 </template>
-
-<script lang="ts">
-export const ModalApi = Symbol() as InjectionKey<
-  Ref<InstanceType<typeof Modal>>
->
-</script>
 
 <script lang="ts" setup>
 import { useSlotsData } from '../api/slots'
 import SlotCard from './SlotCard.vue'
 import Modal from './Modal.vue'
-import { InjectionKey, provide, Ref, ref } from 'vue'
 
 const { slots, loading } = useSlotsData()
-
-const modal = ref<InstanceType<typeof Modal> | null>(null)
-
-provide(ModalApi, modal)
 </script>
