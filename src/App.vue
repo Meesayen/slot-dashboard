@@ -1,21 +1,48 @@
-<script setup lang="ts">
-// This starter template is using Vue 3 <script setup> SFCs
-// Check out https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup
-import HelloWorld from './components/HelloWorld.vue'
-</script>
-
 <template>
-  <img alt="Vue logo" src="./assets/logo.png" />
-  <HelloWorld msg="Hello Vue 3 + TypeScript + Vite" />
+  <div
+    class="modal-zone fixed inset-0 z-50 flex items-center justify-center"
+  ></div>
+
+  <div class="flex space-x-1 px-4 bg-indigo-700">
+    <div class="flex-1"></div>
+    <div class="flex">
+      <div
+        v-if="profile"
+        class="px-4 py-2 rounded-md text-white bg-slate-600 cursor-pointer"
+        @click="api.logout"
+      >
+        logout
+      </div>
+      <div
+        v-else
+        class="px-4 py-2 rounded-md text-white bg-cyan-600 cursor-pointer"
+        @click="api.login"
+      >
+        login
+      </div>
+    </div>
+
+    <ProfileDisplay class="text-white" :profile="profile" />
+  </div>
+  <div class="">
+    <Slots />
+  </div>
 </template>
 
+<script setup lang="ts">
+import { useProfileData, useProfileApi } from './api/profile'
+import Slots from './components/Slots.vue'
+import ProfileDisplay from './components/ProfileDisplay.vue'
+
+const { profile, loading } = useProfileData()
+const api = useProfileApi()
+</script>
+
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+.modal-zone:not(:empty) {
+  @apply bg-black/60;
+}
+.modal-zone:empty {
+  pointer-events: none;
 }
 </style>

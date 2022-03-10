@@ -1,0 +1,14 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body {
+  @apply h-screen;
+  color: rgb(29 26 69);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+input[type='text'] {
+  @apply border border-zinc-300 rounded-sm px-3 py-1;
+}
