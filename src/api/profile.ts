@@ -2,15 +2,17 @@ import { ref } from 'vue'
 import { api } from './core'
 import { Profile } from './types'
 
+const loading = ref(true)
+const user = ref()
+const profile = ref<Profile>()
+
 export function useProfileData() {
-  const user = ref()
-  const profile = ref<Profile>()
-  const loading = ref(true)
+  user.value = api.auth.user()
 
   async function getProfile() {
-    try {
-      user.value = api.auth.user()
+    profile.value = undefined
 
+    try {
       if (!user.value) return
 
       let { data, error, status } = await api
@@ -21,6 +23,7 @@ export function useProfileData() {
 
       if (status === 406) {
         updateProfile()
+        return
       }
 
       if (error && status !== 406) throw error
@@ -36,13 +39,11 @@ export function useProfileData() {
 
   async function updateProfile() {
     try {
-      // loading.value = true
-      user.value = api.auth.user()
-
       const updates = {
         id: user.value.id,
         username: user.value.user_metadata.user_name,
         avatar_url: user.value.user_metadata.avatar_url,
+        email: user.value.user_metadata.email,
         updated_at: new Date(),
       }
 
@@ -51,25 +52,32 @@ export function useProfileData() {
 
       if (data) {
         profile.value = data[0]
-        loading.value = false
       }
     } catch (error) {
       console.log(error)
     } finally {
-      // loading.value = false
+      loading.value = false
     }
   }
 
-  getProfile()
+  api.auth.onAuthStateChange((_, session) => {
+    user.value = session?.user
+    getProfile()
+  })
 
   return { profile, loading }
 }
 
 export function useProfileApi() {
   function login() {
-    api.auth.signIn({
-      provider: 'github',
-    })
+    api.auth.signIn(
+      {
+        provider: 'github',
+      },
+      {
+        redirectTo: import.meta.env.VITE_AUTH_REDIRECT_URL as string,
+      }
+    )
   }
   function logout() {
     api.auth.signOut()

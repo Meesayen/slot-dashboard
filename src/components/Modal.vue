@@ -50,13 +50,14 @@ const modal = useModal(ModalKey)
 
 const canSubmit = computed(() => Boolean(feature.value))
 const api = useSlotsApi()
-function submit() {
+async function submit() {
   const { slotId, user } = modal.data ?? {}
   if (!slotId || !user) return
-  api.claim(slotId, {
+  await api.claim(slotId, {
     userId: user.id,
     feature: feature.value,
   })
+  feature.value = ''
   modal.close()
 }
 </script>
