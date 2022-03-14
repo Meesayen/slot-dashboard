@@ -18,7 +18,7 @@ export default async function handler(
   const { data } = await api.from('profiles').select().eq('email', email)
 
   if (!data[0]) {
-    response.status(403).send('User not recognized.')
+    response.status(403).json(data)
     return
   }
 
