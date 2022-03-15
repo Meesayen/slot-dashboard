@@ -35,6 +35,7 @@ import Slots from './components/Slots.vue'
 import ProfileDisplay from './components/ProfileDisplay.vue'
 
 const { profile, loading } = useProfileData()
+
 const api = useProfileApi()
 </script>
 
