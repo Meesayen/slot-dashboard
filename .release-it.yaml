@@ -1,5 +1,5 @@
 git:
-  commitMessage: 'chore: release v${version}'
+  commitMessage: 'ci: release v${version}'
 npm:
   publish: false
 github:
@@ -7,3 +7,26 @@ github:
 plugins:
   '@release-it/conventional-changelog':
     preset: conventionalcommits
+    types:
+      - type: 'feat'
+        section: 'Features'
+      - type: 'fix'
+        section: 'Bug Fixes'
+      - type: 'perf'
+        section: 'Performance Improvements'
+      - type: 'revert'
+        section: 'Reverts'
+      - type: 'chore'
+        section: 'Miscellaneous Chores'
+      - type: 'docs'
+        section: 'Documentation'
+        hidden: true
+      - type: 'test'
+        section: 'Tests'
+        hidden: true
+      - type: 'build'
+        section: 'Build System'
+        hidden: true
+      - type: 'ci'
+        section: 'Continuous Integration'
+        hidden: true
