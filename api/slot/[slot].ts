@@ -23,15 +23,18 @@ export default async function handler(
   }
 
   try {
-    await api
+    const { error } = await api
       .from('slots')
       .update({
         claimed_by: data[0].id,
         feature: feature,
         available: false,
       })
-      .match({ id: slotId })
+      .match({ slotId: slotId })
 
+    if (error) {
+      throw error
+    }
     response.status(200).send('Done.')
   } catch (error) {
     response.status(500).json(error)
