@@ -15,7 +15,8 @@ export default async function handler(
           slotId,
           claimed_by (
             id,
-            username
+            username,
+            email
           )
         `
     )
