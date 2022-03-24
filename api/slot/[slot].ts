@@ -16,16 +16,12 @@ export default async function handler(
   }
 
   const { data } = await api.from('profiles').select().eq('email', email)
-  console.log({ email })
-  console.log({ data })
-  console.log(data[0])
 
   if (!data[0]) {
     response.status(403).send('User not recognized.')
     return
   }
 
-  console.log({ slotId })
   try {
     const { error } = await api
       .from('slots')
