@@ -1,63 +1,85 @@
 <template>
   <teleport to=".modal-zone">
     <div
-      class="fixed w-screen h-screen md:max-w-lg md:max-h-80 bg-white border flex flex-col rounded-xl"
+      class="fixed md:max-w-lg md:max-h-[70vh] bg-white border flex flex-col rounded-xl"
       v-if="modal.status === 'opened'"
     >
       <div class="flex justify-between px-4 py-2.5 border-b text-lg font-bold">
-        Claim Slot
+        {{ title }}
       </div>
 
       <div class="flex-1 p-4 space-y-4">
-        <div class="">Claiming slot "{{ modal.data.slotName }}"</div>
-        <div class="flex flex-col space-y-2">
-          <div class="text-xs uppercase tracking-wider">
-            What feature are you deploying there?
-          </div>
-          <input type="text" v-model="feature" />
-        </div>
+        <slot name="content" />
       </div>
 
       <div class="flex space-x-3 px-4 py-2">
         <div class="flex-1"></div>
-        <Button type="secondary" @click="modal.close"> cancel </Button>
-        <Button @click="submit" :disabled="!canSubmit">submit</Button>
+        <slot name="footer" />
       </div>
     </div>
   </teleport>
 </template>
 
 <script lang="ts">
-interface Data {
-  slotId: number | null
-  slotName: string
-  user: Profile | null
+import { computed, InjectionKey, reactive, ref, shallowRef } from 'vue'
+
+interface ModalApi<T> {
+  open(data: T): void
+  close(): void
 }
 
-export const ModalKey = createModalKey<Data>('info-modal')
+type Status = 'opened' | 'closed'
+
+export function createModalKey<T>(key: string) {
+  return Symbol() as InjectionKey<ModalApi<T>>
+}
+
+const modals = ref(new Map())
+
+export function useModal<T = {}>(key: InjectionKey<ModalApi<T>>) {
+  if (!modals.value.has(key)) {
+    modals.value.set(key, {
+      status: 'closed',
+      data: null,
+    })
+  }
+
+  const modal = modals.value.get(key)
+
+  function open(data: T) {
+    modal.data = data
+    modal.status = 'opened'
+    modals.value.set(key, modal)
+  }
+  function close() {
+    modal.data = null
+    modal.status = 'closed'
+    modals.value.set(key, modal)
+  }
+
+  return reactive({
+    open,
+    close,
+    status: computed(() => modals.value.get(key).status as Status),
+    data: computed(() => modals.value.get(key).data as T),
+  })
+}
+
+export function closeAllModals() {
+  for (const key of modals.value.keys()) {
+    const modal = modals.value.get(key)
+    modal.data = null
+    modal.status = 'closed'
+    modals.value.set(key, modal)
+  }
+}
 </script>
 
 <script setup lang="ts">
-import { computed, reactive, ref } from 'vue'
-import { useSlotsApi } from '../api/slots'
-import { useModal, createModalKey } from './modal'
-import { Profile } from '../api/types'
-import Button from './Button.vue'
+const props = defineProps<{
+  title: string
+  modalKey: InjectionKey<{}>
+}>()
 
-const feature = ref('')
-
-const modal = useModal(ModalKey)
-
-const canSubmit = computed(() => Boolean(feature.value))
-const api = useSlotsApi()
-async function submit() {
-  const { slotId, user } = modal.data ?? {}
-  if (!slotId || !user) return
-  await api.claim(slotId, {
-    userId: user.id,
-    feature: feature.value,
-  })
-  feature.value = ''
-  modal.close()
-}
+const modal = useModal(props.modalKey)
 </script>

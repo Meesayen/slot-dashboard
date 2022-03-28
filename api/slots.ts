@@ -16,7 +16,8 @@ export default async function handler(
           claimed_by (
             id,
             username,
-            email
+            email,
+            nickname
           )
         `
     )

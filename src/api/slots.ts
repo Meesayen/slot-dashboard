@@ -19,7 +19,8 @@ export function useSlotsData() {
           claimed_by (
             id,
             username,
-            avatar_url
+            avatar_url,
+            nickname
           )
         `
       )

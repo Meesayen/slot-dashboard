@@ -6,13 +6,13 @@
     <SlotCard v-for="slot of slots" :key="slot.id" :slot="slot" />
   </div>
 
-  <Modal />
+  <ClaimSlotModal />
 </template>
 
 <script lang="ts" setup>
 import { useSlotsData } from '../api/slots'
 import SlotCard from './SlotCard.vue'
-import Modal from './Modal.vue'
+import ClaimSlotModal from './ClaimSlotModal.vue'
 
 const { slots, loading } = useSlotsData()
 </script>

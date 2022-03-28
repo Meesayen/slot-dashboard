@@ -6,6 +6,19 @@ const loading = ref(true)
 const user = ref()
 const profile = ref<Profile>()
 
+async function updateProfile(updatedProfile: Profile) {
+  const { data, error } = await api.from('profiles').upsert({
+    ...updatedProfile,
+    updated_at: new Date(),
+  })
+
+  if (error) throw error
+
+  if (data) {
+    profile.value = data[0]
+  }
+}
+
 export function useProfileData() {
   user.value = api.auth.user()
 
@@ -17,16 +30,28 @@ export function useProfileData() {
 
       let { data, error, status } = await api
         .from('profiles')
-        .select(`id, username, website, avatar_url`)
+        .select(`id, username, nickname, avatar_url`)
         .eq('id', user.value.id)
         .single()
 
       if (status === 406) {
-        updateProfile()
+        try {
+          updateProfile({
+            id: user.value.id,
+            username: user.value.user_metadata.user_name,
+            nickname: user.value.user_metadata.user_name,
+            avatar_url: user.value.user_metadata.avatar_url,
+            email: user.value.user_metadata.email,
+          })
+        } catch (error) {
+          console.log(error)
+        } finally {
+          loading.value = false
+        }
         return
       }
 
-      if (error && status !== 406) throw error
+      if (error) throw error
 
       if (data) {
         profile.value = data
@@ -34,29 +59,6 @@ export function useProfileData() {
       }
     } catch (error) {
       console.log(error)
-    }
-  }
-
-  async function updateProfile() {
-    try {
-      const updates = {
-        id: user.value.id,
-        username: user.value.user_metadata.user_name,
-        avatar_url: user.value.user_metadata.avatar_url,
-        email: user.value.user_metadata.email,
-        updated_at: new Date(),
-      }
-
-      const { data, error } = await api.from('profiles').upsert(updates)
-      if (error) throw error
-
-      if (data) {
-        profile.value = data[0]
-      }
-    } catch (error) {
-      console.log(error)
-    } finally {
-      loading.value = false
     }
   }
 
@@ -86,5 +88,6 @@ export function useProfileApi() {
   return {
     login,
     logout,
+    update: updateProfile,
   }
 }

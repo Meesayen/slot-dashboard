@@ -8,7 +8,7 @@
     />
     <div v-else class="w-8 h-8 rounded-full bg-slate-500"></div>
     <div class="text-sm">
-      {{ profile?.username ?? 'anon' }}
+      {{ profile?.nickname ?? profile?.username ?? 'anon' }}
     </div>
   </div>
 </template>

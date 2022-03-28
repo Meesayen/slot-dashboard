@@ -54,8 +54,8 @@ import { useSlotsApi } from '../api/slots'
 import { Slot } from '../api/types'
 import ProfileDisplay from './ProfileDisplay.vue'
 import Button from './Button.vue'
-import { useModal } from './modal'
-import { ModalKey } from './Modal.vue'
+import { useModal } from './Modal.vue'
+import { ClaimSlotModalKey } from './ClaimSlotModal.vue'
 
 const props = defineProps<{
   slot: Slot
@@ -64,7 +64,7 @@ const props = defineProps<{
 const api = useSlotsApi()
 const { profile } = useProfileData()
 
-const modal = useModal(ModalKey)
+const modal = useModal(ClaimSlotModalKey)
 
 function openModal() {
   modal.open({

@@ -2,6 +2,8 @@ export interface Profile {
   id: string
   username: string
   avatar_url: string
+  nickname: string
+  email: string
 }
 
 export interface Slot {
