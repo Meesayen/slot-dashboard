@@ -7,17 +7,24 @@ export default async function handler(
 ) {
   const slotId = request.query.slot
 
-  const { email, feature } = request.body ?? {}
-  if (!email || !feature) {
+  const { email, username, feature } = request.body ?? {}
+  if ((!email && !username) || !feature) {
     response
       .status(400)
-      .send('Missing parameter. Please provide the following: email, feature')
+      .send(
+        'Missing parameter. Please provide the following: `email` or `username`, and `feature`'
+      )
     return
   }
 
-  const { data } = await api.from('profiles').select().eq('email', email)
+  const { data: user } = await api
+    .from('profiles')
+    .select()
+    .or(`email.eq.${email},username.eq.${username}`)
+    .limit(1)
+    .single()
 
-  if (!data[0]) {
+  if (!user) {
     response.status(403).send('User not recognized.')
     return
   }
@@ -26,7 +33,7 @@ export default async function handler(
     const { error } = await api
       .from('slots')
       .update({
-        claimed_by: data[0].id,
+        claimed_by: user.id,
         feature: feature,
         available: false,
       })
