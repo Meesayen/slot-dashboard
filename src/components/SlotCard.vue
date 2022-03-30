@@ -20,7 +20,7 @@
       </div>
     </div>
 
-    <div class="p-3" v-if="slot.claimed_by">
+    <div class="px-3" v-if="slot.claimed_by">
       <span class="text-zinc-500 uppercase text-xs tracking-wider">
         Feature:
       </span>
