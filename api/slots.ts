@@ -13,6 +13,8 @@ export default async function handler(
           name,
           available,
           slotId,
+          branch,
+          feature,
           claimed_by (
             id,
             username,
