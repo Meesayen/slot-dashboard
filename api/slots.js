@@ -1,10 +1,6 @@
-import type { VercelRequest, VercelResponse } from '@vercel/node'
-import { api } from './_api'
+import { api } from './_api.js'
 
-export default async function handler(
-  request: VercelRequest,
-  response: VercelResponse
-) {
+export default async function handler(request, response) {
   const { data } = await api
     .from('slots')
     .select(

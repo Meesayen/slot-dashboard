@@ -1,10 +1,6 @@
-import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { api } from '../_api'
 
-export default async function handler(
-  request: VercelRequest,
-  response: VercelResponse
-) {
+export default async function handler(request, response) {
   const slotId = request.query.slot
 
   const { email, username, feature, branch } = request.body ?? {}
