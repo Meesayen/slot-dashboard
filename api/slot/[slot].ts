@@ -7,7 +7,7 @@ export default async function handler(
 ) {
   const slotId = request.query.slot
 
-  const { email, username, feature } = request.body ?? {}
+  const { email, username, feature, branch } = request.body ?? {}
   if ((!email && !username) || !feature) {
     response
       .status(400)
@@ -35,6 +35,7 @@ export default async function handler(
       .update({
         claimed_by: user.id,
         feature: feature,
+        branch: branch,
         available: false,
       })
       .match({ slotId: slotId })
