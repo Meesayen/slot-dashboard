@@ -16,6 +16,8 @@ export function useSlotsData() {
           available,
           feature,
           updated_at,
+          is_preprod,
+          order,
           claimed_by (
             id,
             username,
@@ -24,7 +26,7 @@ export function useSlotsData() {
           )
         `
       )
-      .order('id')
+      .order('order')
   }
 
   watchEffect(async () => {
