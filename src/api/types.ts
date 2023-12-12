@@ -13,4 +13,5 @@ export interface Slot {
   claimed_by: Profile
   available: boolean
   updated_at: string
+  is_preprod: boolean
 }

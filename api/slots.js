@@ -11,6 +11,8 @@ export default async function handler(request, response) {
           slotId,
           branch,
           feature,
+          is_preprod,
+          order,
           claimed_by (
             id,
             username,
@@ -19,6 +21,6 @@ export default async function handler(request, response) {
           )
         `
     )
-    .order('id')
+    .order('order')
   response.status(200).json(data)
 }

@@ -3,7 +3,9 @@
     loading...
   </div>
   <div class="grid grid-cols-4 gap-6 p-8" v-else>
-    <SlotCard v-for="slot of slots" :key="slot.id" :slot="slot" />
+    <template v-for="slot of slots" :key="slot.id">
+      <SlotCard v-if="!slot.is_preprod" :slot="slot" />
+    </template>
   </div>
 
   <ClaimSlotModal />
