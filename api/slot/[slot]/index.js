@@ -1,4 +1,4 @@
-import { api } from '../_api.js'
+import { api } from '../../_api.js'
 
 export default async function handler(request, response) {
   const slotId = request.query.slot
